@@ -1,0 +1,420 @@
+{
+  "data": {
+    "speech_id": "1272-128104-0003",
+    "duration_s": 9.9,
+    "fs": 16000,
+    "transcript": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA",
+    "noise_white": {
+      "orig_fs": 19980,
+      "orig_subtype": "PCM_16",
+      "duration_s": 235.23
+    },
+    "noise_babble": {
+      "orig_fs": 19980,
+      "orig_subtype": "PCM_16",
+      "duration_s": 235.23
+    },
+    "noise_machinegun": {
+      "orig_fs": 8000,
+      "orig_subtype": "PCM_U8",
+      "duration_s": 235.23
+    },
+    "speech_dynamic_range_dB": 47.07844873635142
+  },
+  "part2": {
+    "shape": [
+      512,
+      1241
+    ],
+    "figs": {
+      "MG": "outputs/figures/p2_MG_clean.png",
+      "PH": "outputs/figures/p2_PH_clean.png",
+      "phase_structure": "outputs/figures/p2_phase_structure.png",
+      "symmetry": "outputs/figures/p2_frame_symmetry.png"
+    }
+  },
+  "part3": {
+    "metrics": [
+      {
+        "variant": "sig1 (zero phase)",
+        "energy_ratio_dB": -13.78800882304544,
+        "corr": 0.04018167874597195,
+        "SNR_dB": 0.007014833291406057,
+        "SC": 0.6928044591692596,
+        "LSD_dB": 6.993657093501697,
+        "STOI": 0.8390644269580312,
+        "ESTOI": 0.7314498600137435
+      },
+      {
+        "variant": "sig1c (zero phase about window centre)",
+        "energy_ratio_dB": -1.9685512783894532,
+        "corr": 0.04490448014041377,
+        "SNR_dB": 0.008760841479045503,
+        "SC": 0.5961987252020842,
+        "LSD_dB": 7.103233567525935,
+        "STOI": 0.9451303218007365,
+        "ESTOI": 0.888607407154738
+      },
+      {
+        "variant": "sig2 unconstrained PH1: real part",
+        "energy_ratio_dB": -8.900300775656147,
+        "corr": -0.045637619532490854,
+        "SNR_dB": 0.00905485581714865,
+        "SC": 0.5775288113616697,
+        "LSD_dB": 6.011451437317954,
+        "STOI": 0.8704346801657191,
+        "ESTOI": 0.7758615579406952
+      },
+      {
+        "variant": "sig2 odd-symmetric PH1",
+        "energy_ratio_dB": -6.265627275603567,
+        "corr": 0.010543709395916047,
+        "SNR_dB": 0.00048283198012860135,
+        "SC": 0.5618041314005486,
+        "LSD_dB": 5.995839991758272,
+        "STOI": 0.87063145248625,
+        "ESTOI": 0.7739910045241083
+      },
+      {
+        "variant": "control: phase only (MG = 1)",
+        "energy_ratio_dB": -0.6970105873083514,
+        "corr": 0.25710074923654314,
+        "SNR_dB": 0.2969980767762261,
+        "SC": 1.2157761245681662,
+        "LSD_dB": 29.231989553806173,
+        "STOI": 0.527325284294452,
+        "ESTOI": 0.26550753364570673
+      }
+    ],
+    "realness": {
+      "sig1_max_abs_imag": 6.910438070362438e-17,
+      "sig2_unconstrained_imag_energy_ratio": 0.516664601857224,
+      "sig2_unconstrained_max_abs_imag": 0.32382230947159174,
+      "sig2_odd_max_abs_imag": 7.464609526259267e-17,
+      "PH1_unconstrained_is_hermitian": false,
+      "PH1_odd_is_hermitian": true
+    },
+    "wstats": [
+      {
+        "index": "original",
+        "kurtosis": 10.731007278218677,
+        "crest_dB": 18.810696208697053,
+        "autocorr_at_lag_H": 0.3058515935940829
+      },
+      {
+        "index": "sig1",
+        "kurtosis": 22.683433326703895,
+        "crest_dB": 22.774662715259705,
+        "autocorr_at_lag_H": 0.8571038231479581
+      },
+      {
+        "index": "sig1c",
+        "kurtosis": 22.88282482735876,
+        "crest_dB": 23.404128497645736,
+        "autocorr_at_lag_H": 0.9594996988352643
+      },
+      {
+        "index": "sig2",
+        "kurtosis": 12.91693786760579,
+        "crest_dB": 20.265872798755765,
+        "autocorr_at_lag_H": 0.051877869531738
+      }
+    ],
+    "figs": {
+      "frame_zero_phase": "outputs/figures/p3_frame_zero_phase.png",
+      "waveforms": "outputs/figures/p3_waveforms.png",
+      "specs": "outputs/figures/p3_spectrograms_sig1_sig2.png",
+      "ltas_env": "outputs/figures/p3_ltas_envelope.png",
+      "complex_sig2": "outputs/figures/p3_sig2_complex.png"
+    }
+  },
+  "part4": {
+    "table": [
+      {
+        "PH1 pattern": "zero phase (PH1 = 0)",
+        "trials": 1,
+        "imag/total energy (mean)": 1.2759288611637194e-31,
+        "max |Im{sig2}|": 6.910438070362438e-17,
+        "real?": true
+      },
+      {
+        "PH1 pattern": "linear phase (pure delay, \u22122\u03c0kd/N)",
+        "trials": 1,
+        "imag/total energy (mean)": 5.240894559711301e-28,
+        "max |Im{sig2}|": 3.629831970360085e-15,
+        "real?": true
+      },
+      {
+        "PH1 pattern": "odd random, DC and Nyquist in {0, \u03c0}",
+        "trials": 20,
+        "imag/total energy (mean)": 2.675270799078929e-32,
+        "max |Im{sig2}|": 9.563626254786374e-17,
+        "real?": true
+      },
+      {
+        "PH1 pattern": "odd random, DC and Nyquist arbitrary",
+        "trials": 20,
+        "imag/total energy (mean)": 0.00027497492085175947,
+        "max |Im{sig2}|": 0.009743239437990811,
+        "real?": false
+      },
+      {
+        "PH1 pattern": "odd random + constant \u03c0/4",
+        "trials": 20,
+        "imag/total energy (mean)": 0.5,
+        "max |Im{sig2}|": 0.31881961508484724,
+        "real?": false
+      },
+      {
+        "PH1 pattern": "even random (wrong symmetry)",
+        "trials": 20,
+        "imag/total energy (mean)": 0.4996546672188874,
+        "max |Im{sig2}|": 0.3667474841505672,
+        "real?": false
+      },
+      {
+        "PH1 pattern": "unconstrained i.i.d. uniform",
+        "trials": 20,
+        "imag/total energy (mean)": 0.4936375114542323,
+        "max |Im{sig2}|": 0.3616168419154742,
+        "real?": false
+      }
+    ],
+    "count": {
+      "N": 512,
+      "frames_M": 1241,
+      "free_phases_per_frame": 255,
+      "binary_choices_per_frame": 4,
+      "real_degrees_of_freedom_total": 316455,
+      "log10_patterns_1bit": {
+        "per_frame": 77.36470888564317,
+        "whole_signal": 96009.60372708317
+      },
+      "log10_patterns_3bit": {
+        "per_frame": 230.8900066742736,
+        "whole_signal": 286534.49828277354
+      },
+      "log10_patterns_8bit": {
+        "per_frame": 614.7032511458495,
+        "whole_signal": 762846.7346719992
+      },
+      "log10_patterns_16bit": {
+        "per_frame": 1228.8044423003712,
+        "whole_signal": 1524946.3128947606
+      }
+    },
+    "figs": {
+      "realness": "outputs/figures/p4_realness.png"
+    }
+  },
+  "part5": {
+    "sweep": [
+      {
+        "window_ms": 16.0,
+        "N": 256,
+        "STOI scrambled": 0.8769161314031927,
+        "ESTOI scrambled": 0.7770250803446254,
+        "STOI blind GLA": 0.8775917818242422,
+        "ESTOI blind GLA": 0.7783392711529279,
+        "STOI GLA true MG": 0.9944167559739788,
+        "ESTOI GLA true MG": 0.9872252393947886,
+        "STOI keyed OTP scrambled": 0.8228875413514033,
+        "ESTOI keyed OTP scrambled": 0.6552905165757473,
+        "energy scrambled/original dB": -6.187183811939265
+      },
+      {
+        "window_ms": 32.0,
+        "N": 512,
+        "STOI scrambled": 0.8792443393989909,
+        "ESTOI scrambled": 0.7917599834894928,
+        "STOI blind GLA": 0.87834225632171,
+        "ESTOI blind GLA": 0.7910618239790554,
+        "STOI GLA true MG": 0.9987624294329918,
+        "ESTOI GLA true MG": 0.9963252235242372,
+        "STOI keyed OTP scrambled": 0.8013866685924408,
+        "ESTOI keyed OTP scrambled": 0.6613617533366543,
+        "energy scrambled/original dB": -5.997983083033539
+      },
+      {
+        "window_ms": 64.0,
+        "N": 1024,
+        "STOI scrambled": 0.8253096813445102,
+        "ESTOI scrambled": 0.7267886218176135,
+        "STOI blind GLA": 0.8254319401141409,
+        "ESTOI blind GLA": 0.7262713157081858,
+        "STOI GLA true MG": 0.9972273224277113,
+        "ESTOI GLA true MG": 0.9908788936620473,
+        "STOI keyed OTP scrambled": 0.7081482504870964,
+        "ESTOI keyed OTP scrambled": 0.5646496942639423,
+        "energy scrambled/original dB": -6.2586788116105705
+      },
+      {
+        "window_ms": 128.0,
+        "N": 2048,
+        "STOI scrambled": 0.7535102517473057,
+        "ESTOI scrambled": 0.6084154741034663,
+        "STOI blind GLA": 0.7501435765002218,
+        "ESTOI blind GLA": 0.6076317835994013,
+        "STOI GLA true MG": 0.9909204449529733,
+        "ESTOI GLA true MG": 0.974283330352556,
+        "STOI keyed OTP scrambled": 0.5924474695658911,
+        "ESTOI keyed OTP scrambled": 0.38682949210767437,
+        "energy scrambled/original dB": -6.212099901970728
+      },
+      {
+        "window_ms": 256.0,
+        "N": 4096,
+        "STOI scrambled": 0.6373759899362493,
+        "ESTOI scrambled": 0.4427413659814978,
+        "STOI blind GLA": 0.6405623187689015,
+        "ESTOI blind GLA": 0.4430441145398192,
+        "STOI GLA true MG": 0.9759037428415498,
+        "ESTOI GLA true MG": 0.9415194179592793,
+        "STOI keyed OTP scrambled": 0.4628386145172445,
+        "ESTOI keyed OTP scrambled": 0.18614901886441887,
+        "energy scrambled/original dB": -5.780321685106282
+      },
+      {
+        "window_ms": 512.0,
+        "N": 8192,
+        "STOI scrambled": 0.4796307605432062,
+        "ESTOI scrambled": 0.21894279897249364,
+        "STOI blind GLA": 0.4823879075089199,
+        "ESTOI blind GLA": 0.2227072709652209,
+        "STOI GLA true MG": 0.9307421242490009,
+        "ESTOI GLA true MG": 0.850382431515523,
+        "STOI keyed OTP scrambled": 0.3799008726239477,
+        "ESTOI keyed OTP scrambled": 0.06696425833979756,
+        "energy scrambled/original dB": -5.865426005480923
+      },
+      {
+        "window_ms": 1024.0,
+        "N": 16384,
+        "STOI scrambled": 0.3909708403235601,
+        "ESTOI scrambled": 0.07623007340847818,
+        "STOI blind GLA": 0.3949817802193719,
+        "ESTOI blind GLA": 0.07297996626763233,
+        "STOI GLA true MG": 0.8408631541659045,
+        "ESTOI GLA true MG": 0.6999205608292407,
+        "STOI keyed OTP scrambled": 0.35734383904755684,
+        "ESTOI keyed OTP scrambled": -0.0026635343641004785,
+        "energy scrambled/original dB": -5.979707536331168
+      },
+      {
+        "window_ms": 2048.0,
+        "N": 32768,
+        "STOI scrambled": 0.36116184542393126,
+        "ESTOI scrambled": 0.006218101064418596,
+        "STOI blind GLA": 0.3788835294458938,
+        "ESTOI blind GLA": 0.01590255023244991,
+        "STOI GLA true MG": 0.7340429965727978,
+        "ESTOI GLA true MG": 0.5405028047007291,
+        "STOI keyed OTP scrambled": 0.34843550117115446,
+        "ESTOI keyed OTP scrambled": -0.02860303318915231,
+        "energy scrambled/original dB": -5.967070702286974
+      }
+    ],
+    "clean": {
+      "scrambled (replace phase)": {
+        "STOI": 0.3959131317852304,
+        "ESTOI": 0.0715885537687755,
+        "SNR_vs_input_dB": 0.007858828856365994
+      },
+      "R1 blind Griffin-Lim": {
+        "STOI": 0.3949976854386864,
+        "ESTOI": 0.06138761897923681,
+        "SNR_vs_input_dB": 0.0009091186309048044
+      },
+      "R2 Griffin-Lim with true MG": {
+        "STOI": 0.9994023265701408,
+        "ESTOI": 0.9982844400936145,
+        "SNR_vs_input_dB": 0.01795938418333322
+      },
+      "scrambled (keyed one-time pad)": {
+        "STOI": 0.35734383904755684,
+        "ESTOI": -0.002663534364100464,
+        "SNR_vs_input_dB": 6.221292760038144e-06
+      },
+      "R3 keyed descramble": {
+        "STOI": 1.0,
+        "ESTOI": 1.0,
+        "SNR_vs_input_dB": 229.03846794996548
+      },
+      "_imag_max_scrambled": 5.515337314120211e-17,
+      "_SC_blind_vs_true_MG": 0.6251886985565133,
+      "_SC_scrambled_vs_true_MG": 0.5353754714801644
+    },
+    "figs": {
+      "sweep": "outputs/figures/p5_window_sweep.png",
+      "recovery_specs": "outputs/figures/p5_recovery_clean.png",
+      "gla_convergence": "outputs/figures/p5_gla_convergence_clean.png"
+    }
+  },
+  "part6": {
+    "figs": {
+      "noises": "outputs/figures/p6_noises.png",
+      "MG_PH_white": "outputs/figures/p6_MG_PH_white.png",
+      "MG_PH_babble": "outputs/figures/p6_MG_PH_babble.png",
+      "MG_PH_machinegun": "outputs/figures/p6_MG_PH_machinegun.png",
+      "stoi_noisy": "outputs/figures/p6_stoi_noisy.png",
+      "phase_ops_noise": "outputs/figures/p6_phase_ops_under_noise.png",
+      "bpf_stoi": "outputs/figures/p6_bpf_stoi.png",
+      "variants_white": "outputs/figures/p6_variants_white_0dB.png",
+      "variants_babble": "outputs/figures/p6_variants_babble_0dB.png",
+      "variants_machinegun": "outputs/figures/p6_variants_machinegun_0dB.png",
+      "bpf_design": "outputs/figures/p6_bpf_design.png",
+      "band_snr": "outputs/figures/p6_band_snr.png",
+      "band_stoi": "outputs/figures/p6_stoi_per_band.png"
+    },
+    "bpf_design": [
+      {
+        "design": "Butterworth-4 300-3400, zero-phase (filtfilt)",
+        "STOI(clean, BPF(clean))": 0.9387496985708158,
+        "ESTOI(clean, BPF(clean))": 0.8598433744612728,
+        "STOI white 0 dB after BPF": 0.6527193682526685
+      },
+      {
+        "design": "Butterworth-4 300-3400, causal (sosfilt)",
+        "STOI(clean, BPF(clean))": 0.9739525828883864,
+        "ESTOI(clean, BPF(clean))": 0.9315364334832135,
+        "STOI white 0 dB after BPF": 0.6835612378855705
+      },
+      {
+        "design": "same |H| as causal, zero phase (FFT)",
+        "STOI(clean, BPF(clean))": 0.9749577717367293,
+        "ESTOI(clean, BPF(clean))": 0.934013035430998,
+        "STOI white 0 dB after BPF": 0.6834752997230528
+      },
+      {
+        "design": "FIR 511 taps 300-3400, linear phase",
+        "STOI(clean, BPF(clean))": 0.9083383650780255,
+        "ESTOI(clean, BPF(clean))": 0.801675510778248,
+        "STOI white 0 dB after BPF": 0.6383133789304618
+      },
+      {
+        "design": "ideal brick-wall 300-3400",
+        "STOI(clean, BPF(clean))": 0.8863000864692574,
+        "ESTOI(clean, BPF(clean))": 0.7335970481877402,
+        "STOI white 0 dB after BPF": 0.6257464274923662
+      },
+      {
+        "design": "Butterworth-4 120-4500, zero-phase",
+        "STOI(clean, BPF(clean))": 0.9964808069178335,
+        "ESTOI(clean, BPF(clean))": 0.9879575647849876,
+        "STOI white 0 dB after BPF": 0.7043904324700201
+      },
+      {
+        "design": "Butterworth-4 500-2500, zero-phase (narrow)",
+        "STOI(clean, BPF(clean))": 0.9100843792466902,
+        "ESTOI(clean, BPF(clean))": 0.8119394598877803,
+        "STOI white 0 dB after BPF": 0.6316653039141857
+      },
+      {
+        "design": "ideal brick-wall 500-2500 (narrow)",
+        "STOI(clean, BPF(clean))": 0.728830959887692,
+        "ESTOI(clean, BPF(clean))": 0.46551602074302384,
+        "STOI white 0 dB after BPF": 0.5311699899594049
+      }
+    ]
+  }
+}

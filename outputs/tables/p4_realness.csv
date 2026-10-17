@@ -1,0 +1,8 @@
+PH1 pattern,trials,imag/total energy (mean),max |Im{sig2}|,real?
+zero phase (PH1 = 0),1,1.2759288611637194e-31,6.910438070362438e-17,True
+"linear phase (pure delay, −2πkd/N)",1,5.240894559711301e-28,3.629831970360085e-15,True
+"odd random, DC and Nyquist in {0, π}",20,2.675270799078929e-32,9.563626254786374e-17,True
+"odd random, DC and Nyquist arbitrary",20,0.00027497492085175947,0.009743239437990811,False
+odd random + constant π/4,20,0.5,0.31881961508484724,False
+even random (wrong symmetry),20,0.4996546672188874,0.3667474841505672,False
+unconstrained i.i.d. uniform,20,0.4936375114542323,0.3616168419154742,False

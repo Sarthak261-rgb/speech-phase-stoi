@@ -1,0 +1,21 @@
+[project]
+name = "speech-phase-stoi"
+version = "1.0.0"
+description = "Magnitude, phase and intelligibility of speech: STFT phase experiments, scrambling, NoiseX-92, STOI"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy", "matplotlib", "soundfile", "pystoi", "pandas", "reportlab", "librosa",
+                "nbformat", "nbconvert", "ipykernel", "pytest", "ruff", "python-docx"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = [".venv", "data", "outputs", "report"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP"]
+ignore = ["E731", "B023", "B905"]
