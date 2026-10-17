@@ -12,8 +12,9 @@ ROOT = Path(__file__).resolve().parent
 LITE = "--lite" in sys.argv
 OUT = ROOT.parent / ("speech-phase-stoi_submission_lite.zip" if LITE else "speech-phase-stoi_submission.zip")
 INCLUDE = ["README.md", "requirements.txt", "pyproject.toml", "Speech_Phase_STOI.ipynb",
-           "report/Speech_Phase_STOI_Report.pdf", "phaselab.py", "experiments.py", "run_all.py", "recover.py",
-           "make_report.py", "report_text.py", "build_notebook.py", "make_zip.py", "outputs/results.json"]
+           "report/Speech_Phase_STOI_Report.pdf", "report/Speech_Phase_STOI_Report.docx", "phaselab.py",
+           "experiments.py", "run_all.py", "recover.py", "make_report.py", "report_text.py", "build_notebook.py",
+           "make_zip.py", "outputs/results.json"]
 if LITE:
     TREES = ["tests", "data/speech", "outputs/tables", "outputs/audio/clean"]
     EXTRA = sorted((ROOT / "outputs" / "challenge").glob("clean__*.wav"))
