@@ -4,11 +4,11 @@ version = "1.0.0"
 description = "Magnitude, phase and intelligibility of speech: STFT phase experiments, scrambling, NoiseX-92, STOI"
 requires-python = ">=3.10"
 dependencies = ["numpy", "scipy", "matplotlib", "soundfile", "pystoi", "pandas", "reportlab", "librosa",
-                "nbformat", "nbconvert", "ipykernel", "pytest", "ruff", "python-docx"]
+                "nbformat", "nbconvert", "ipykernel", "pytest", "pytest-cov", "ruff", "python-docx"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q --cov=phaselab --cov=recover --cov-report=term --cov-report=json:outputs/tables/coverage.json"
 filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
 
 [tool.ruff]

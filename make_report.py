@@ -221,7 +221,7 @@ def _footer(canvas, doc):
 def write_pdf(D, path, meta):
     doc = SimpleDocTemplate(str(path), pagesize=A4, leftMargin=2.3 * cm, rightMargin=2.3 * cm, topMargin=2.2 * cm,
                             bottomMargin=2.4 * cm, title="Magnitude, Phase and Intelligibility of Speech",
-                            author=meta.get("name", ""))
+                            author=meta.get("name", ""), creator=meta.get("name", ""), subject="")
     doc.build(D.story, onFirstPage=_footer, onLaterPages=_footer)
 
 
@@ -243,7 +243,8 @@ def _runs(par, text, size=None, bold=False, italic=False):
                 par.add_run().add_break()
             continue
         r = par.add_run(_ENTITY.get(tok, tok))
-        r.bold, r.italic = state["b"], state["i"]
+        r.bold = True if state["b"] else None          # None inherits the paragraph style (bold headings)
+        r.italic = True if state["i"] else None
         r.font.subscript, r.font.superscript = state["sub"], state["super"]
         r.font.name = "Times New Roman"
         if size:
@@ -263,7 +264,19 @@ def _times_style(style, size, bold=False, italic=False):
         fonts.attrib.pop(qn(k), None)
 
 
-def write_docx(D, path):
+def _no_split(row, repeat_header=False):
+    """Stop Word from breaking a table row across pages; repeat the header row on each page."""
+    from docx.oxml import OxmlElement
+    from docx.oxml.ns import qn
+    tr_pr = row._tr.get_or_add_trPr()
+    tr_pr.append(OxmlElement("w:cantSplit"))
+    if repeat_header:
+        h = OxmlElement("w:tblHeader")
+        h.set(qn("w:val"), "true")
+        tr_pr.append(h)
+
+
+def write_docx(D, path, author=""):
     from docx import Document
     from docx.enum.table import WD_TABLE_ALIGNMENT
     from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
@@ -331,10 +344,13 @@ def write_docx(D, path):
             t.style = "Table Grid"
             t.alignment = WD_TABLE_ALIGNMENT.CENTER
             for i, row in enumerate([header] + body):
+                _no_split(t.rows[i], repeat_header=i == 0)
                 for j, v in enumerate(row):
                     c = t.rows[i].cells[j]
                     c.width = Cm(widths[j])
-                    c.paragraphs[0].paragraph_format.space_after = Pt(0)
+                    pf = c.paragraphs[0].paragraph_format
+                    pf.space_after = Pt(0)
+                    pf.keep_with_next = len(body) <= 16          # short tables stay on one page
                     _runs(c.paragraphs[0], v, size=9.5, bold=i == 0)
             doc.add_paragraph()
         elif kind == "refs":
@@ -343,7 +359,10 @@ def write_docx(D, path):
                 par.paragraph_format.left_indent = Cm(0.8)
                 par.paragraph_format.first_line_indent = Cm(-0.8)
                 _runs(par, f"[{i}]\u2002{r}", size=11)
-    doc.core_properties.title = "Magnitude, Phase and Intelligibility of Speech"
+    cp = doc.core_properties
+    cp.title = "Magnitude, Phase and Intelligibility of Speech"
+    cp.author = cp.last_modified_by = author
+    cp.comments = cp.subject = cp.keywords = ""
     doc.save(str(path))
 
 
@@ -368,7 +387,7 @@ def main():
     REP.mkdir(exist_ok=True)
     pdf, docx = REP / "Speech_Phase_STOI_Report.pdf", REP / "Speech_Phase_STOI_Report.docx"
     write_pdf(D, pdf, meta)
-    write_docx(D, docx)
+    write_docx(D, docx, meta["name"])
     print(f"wrote {pdf.name} ({pdf.stat().st_size / 1e6:.1f} MB) and {docx.name} "
           f"({docx.stat().st_size / 1e6:.1f} MB): {D.nfig} figures, {D.ntab} tables")
 

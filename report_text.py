@@ -34,6 +34,8 @@ def load():
          "es": rd("p6_ESTOI_wide.csv"), "long": rd("p6_all_variants_long.csv"), "bpf": rd("p6_bpf.csv"),
          "diag": rd("p6_bpf_design_diagnostics.csv"), "rn": rd("p6_realness_noisy.csv"),
          "pb": rd("p6_stoi_per_band.csv"), "bs": rd("p6_band_snr.csv"), "tests": rd("test_results.csv")}
+    cov = TAB / "coverage.json"
+    T["coverage"] = json.loads(cov.read_text())["files"] if cov.exists() else {}
     return R, T
 
 
@@ -65,10 +67,11 @@ def abstract_intro(D, R, T, m):
         f"contribute to a speech signal. A 9.9 s clean utterance from LibriSpeech was analysed with a 32 ms Hann "
         f"window and an 8 ms hop. Rebuilding the signal from the magnitude with zero phase gave a buzzy, robotic "
         f"voice, and rebuilding it with a random phase gave a rough, noisy one, yet both stayed largely intelligible "
-        f"(STOI {num(s1['STOI'])} and {num(s2['STOI'])}). A real signal is obtained only when the phase is "
-        f"odd-symmetric, and infinitely many such phases exist. Random phase made the speech unintelligible only when "
+        f"(STOI {num(s1['STOI'])} and {num(s2['STOI'])}). A real signal is guaranteed when the phase is "
+        f"odd-symmetric in every frame, and infinitely many such phases exist. Random phase made the speech "
+        f"unintelligible only when "
         f"the frame was made about one second long (ESTOI {num(p5['scrambled (replace phase)']['ESTOI'])}), and such "
-        f"speech can be recovered only if the magnitude or the random phase itself is kept. The experiments were "
+        f"speech could be recovered only when the magnitude or the random phase itself was kept. The experiments were "
         f"repeated with NOISEX-92 white, babble and machine-gun noise at −2 to 10 dB SNR. A band-pass filter "
         f"did not improve STOI in any of the fifteen noisy conditions.")
     D.h1("1. Introduction")
@@ -110,16 +113,18 @@ def method(D, R, T):
         "For a modified STFT it returns the signal whose STFT is closest to the modified one, and its output is "
         "complex if the modified spectrum is not conjugate-symmetric.")
     rows = [
-        ["Window", "Hann, N = 512 (32 ms)", "speech is nearly stationary over 20 to 40 ms; 31.25 Hz bins resolve "
-         "the harmonics of a 116 Hz voice; low side lobes"],
+        ["Window", "Hann, N = 512 (32 ms)", "speech is nearly stationary over 20 to 40 ms; bins 31.25 Hz apart "
+         "separate harmonics 116 Hz apart; low side lobes"],
         ["Hop", "H = 128 (8 ms), 75% overlap", "the squared windows add to a constant, so the inverse is stable; the "
          "fourfold redundancy is also what makes phase recovery possible in Part 5"],
         ["FFT", "two-sided, N = 512", "keeps the symmetry studied in Parts 3 and 4 visible"],
         ["Inverse STFT", "least-squares [1]", "correct inverse for a modified STFT"],
         ["Random phase", "uniform on [−π, π), fixed seed", "no preferred phase; repeatable"],
         ["Scrambler frame", "1.024 s, 75% overlap", "chosen from the sweep in Section 3.5"],
-        ["Phase recovery", "fast Griffin–Lim [7], 200 iterations", "standard method; converged in all runs"],
-        ["Band-pass filter", "Butterworth, order 4, forward-backward", "flat pass band; no phase distortion or delay"],
+        ["Phase recovery", "fast Griffin–Lim [7], 200 iterations", "standard method; settled within 200 "
+         "iterations in every run"],
+        ["Band-pass filter", "Butterworth (order 4 per edge), forward-backward", "flat pass band; no phase "
+         "distortion or delay"],
         ["Intelligibility", "STOI [8] and ESTOI [9]", "STOI is required; ESTOI copes better with fluctuating noise "
          "and falls to about 0 for unintelligible speech"],
     ]
@@ -196,14 +201,16 @@ def part3(D, R, T):
         f"with {100 * re['sig2_unconstrained_imag_energy_ratio']:.1f}% of its energy in the imaginary part. A signal "
         f"is real only if its spectrum satisfies X[N − k] = X*[k]. MG already meets the magnitude part of this "
         f"condition, so PH1 must satisfy PH1[N − k] = −PH1[k], and an unrestricted random array almost never "
-        f"does. A real sig2 is therefore possible, but only for a PH1 with this symmetry (Section 3.4). With such a "
+        f"does. A real sig2 is therefore possible: it is guaranteed when PH1 has this symmetry in every frame "
+        f"(Section 3.4). With such a "
         f"PH1 the largest imaginary value is {sci(re['sig2_odd_max_abs_imag'])}, which is rounding error. Taking "
         f"the real part of the complex sig2 also gives a real signal, but it scales the magnitude by a random factor "
-        f"and loses about 3 dB more ({num(s2u['energy_ratio_dB'], 1)} dB against {num(s2['energy_ratio_dB'], 1)} dB). "
+        f"and loses another {num(s2['energy_ratio_dB'] - s2u['energy_ratio_dB'], 1)} dB "
+        f"({num(s2u['energy_ratio_dB'], 1)} dB against {num(s2['energy_ratio_dB'], 1)} dB). "
         f"Below, sig2 means the real signal obtained with a symmetric random PH1.")
     D.h3("sig2 compared with the original")
     D.p(f"Inside each frame the harmonics now add with random phases, so each frame becomes a burst of noise with the "
-        f"right spectral shape. sig2 sounds rough and hoarse, partly like reverberant whispering, and its waveform is "
+        f"right spectral shape. sig2 sounds rough and hoarse, and its waveform is "
         f"uncorrelated with the original (r = {num(s2['corr'])}). It is {num(-s2['energy_ratio_dB'], 1)} dB weaker. "
         f"This agrees with a simple argument: a random-phase spectrogram is not the STFT of any signal, and the "
         f"inverse STFT keeps only the part that is consistent, which for a random phase is about H/N = 1/4 of the "
@@ -240,10 +247,13 @@ def part4(D, R, T):
     p4, c = T["p4"], R["part4"]["count"]
     D.h2("3.4 Phase pattern that gives a real sig2 (Part 4)")
     D.q("Is there a pattern in PH1 that ensures a real-valued sig2? How many such patterns are possible?")
-    D.p("Yes. In every frame m the phase must be odd about N/2, and the DC and Nyquist bins must be real:")
+    D.p("Yes. sig2 is guaranteed to be real if, in every frame m, the phase is odd about N/2 and the DC and "
+        "Nyquist bins are real:")
     D.eq("PH1(m, N − k) = −PH1(m, k)  (mod 2π),   k = 1, ..., N/2 − 1", 2)
     D.eq("PH1(m, 0) and PH1(m, N/2) ∈ {0, π}", 3)
-    D.p(f"These conditions are both necessary and sufficient. Table {D.ref('t_p4')} checks them numerically. Zero "
+    D.p(f"Wherever MG is non-zero, these conditions are necessary and sufficient for the inverse DFT of each frame "
+        f"to be real, and the overlap-add of real frames is then real. Table {D.ref('t_p4')} checks them "
+        f"numerically. Zero "
         f"phase, a linear phase (a pure delay) and symmetric random phases all give imaginary parts at the "
         f"10<super>−16</super> level. A symmetric phase with arbitrary DC and Nyquist values, a symmetric phase "
         f"plus a constant π/4, an even phase and an unrestricted phase all give complex signals.")
@@ -273,8 +283,9 @@ def part5(D, R, T):
         f"STOI falls from {num(sw.loc[256, 'STOI scrambled'])} at 16 ms to {num(sw.loc[32768, 'STOI scrambled'])} "
         f"at 2 s, and ESTOI from {num(sw.loc[256, 'ESTOI scrambled'])} to {num(sw.loc[32768, 'ESTOI scrambled'])}. "
         f"Most of the drop happens between about 128 and 512 ms, roughly the length of a syllable: once a frame "
-        f"covers several syllables, random phase smears them together. For long frames the phase, not the magnitude, "
-        f"carries the intelligibility, as Oppenheim and Lim [2] also observed. A frame of 1.024 s was chosen for the "
+        f"covers several syllables, random phase smears them together. For long frames the magnitude alone no longer "
+        f"carries the intelligibility; earlier studies found that the phase then does [2], [4]. A frame of 1.024 s "
+        f"was chosen for the "
         f"scrambler. It gives STOI {num(p5['scrambled (replace phase)']['STOI'])} and ESTOI "
         f"{num(p5['scrambled (replace phase)']['ESTOI'])}, which is unintelligible. Scrambled versions were made for "
         f"the clean recording and for all fifteen noisy signals.")
@@ -289,8 +300,9 @@ def part5(D, R, T):
         f"file (SC = {num(p5['_SC_scrambled_vs_true_MG'])}).")
     D.p(f"<i>Recovery with the magnitude.</i> If the true 32 ms magnitude is sent along with the file, Griffin–Lim "
         f"rebuilds the speech almost perfectly (STOI {num(p5['R2 Griffin-Lim with true MG']['STOI'])}), since a "
-        f"redundant STFT magnitude fixes the signal up to its sign [5], [6]. The waveform is not identical (SNR about "
-        f"0 dB) because the sign of separate speech segments cannot be decided, but this cannot be heard.")
+        f"redundant STFT magnitude in general fixes the signal up to its sign [5], [6]. The waveform is not identical "
+        f"(SNR about 0 dB) because the sign of separate speech segments cannot be decided, which does not affect "
+        f"STOI.")
     D.p(f"<i>Recovery with a key.</i> Instead of replacing the phase, an odd random phase K, generated from a secret "
         f"number, is added to the phase of non-overlapping 1.024 s frames. The result is real, because the sum of two "
         f"odd phases is odd, and just as unintelligible (STOI {num(p5['scrambled (keyed one-time pad)']['STOI'])}, "
@@ -430,25 +442,30 @@ def code_and_tests(D, R, T, m):
         ["STFT and inverse", counts.get("test_stft.py", 0), "exact reconstruction for every window size used; "
          "two-sided output; conjugate symmetry of a real signal; constant window overlap; complex output for a "
          "non-symmetric input"],
-        ["Phase (Parts 3 and 4)", counts.get("test_phase.py", 0), "symmetric phase gives a real signal (5 seeds); "
+        ["Parts 3 and 4: phase", counts.get("test_phase.py", 0), "symmetric phase gives a real signal (5 seeds); "
          "unrestricted, wrong-DC, offset and even phases give complex signals; zero-phase frame is even; 125 Hz "
          "buzz; the 1/4 energy rule"],
-        ["Recovery (Part 5)", counts.get("test_recovery.py", 0), "key restores the signal exactly and a wrong key "
+        ["Part 5: recovery", counts.get("test_recovery.py", 0), "key restores the signal exactly and a wrong key "
          "does not; magnitudes are kept; scrambled speech is unintelligible; the scrambled signal is a Griffin–"
          "Lim fixed point; recovery from the true magnitude works"],
-        ["Noise, STOI, filters (Part 6)", counts.get("test_noise_metrics_filters.py", 0), "noise added at exactly "
+        ["Part 6: noise, STOI, filters", counts.get("test_noise_metrics_filters.py", 0), "noise added at exactly "
          "the target SNR; STOI equals 1 for identical signals, ignores gain and falls with noise; per-band STOI "
          "matches pystoi; filter gains, delays and band SNRs"],
-        ["Data (Part 1)", counts.get("test_data.py", 0), "recording length, sampling rate and noise floor; noise "
+        ["Part 1: data", counts.get("test_data.py", 0), "recording length, sampling rate and noise floor; noise "
          "files present at 16 kHz"],
+        ["Files and tools", counts.get("test_io_and_tools.py", 0), "wav saving, loading and resampling; metric "
+         "sanity checks; input validation; recover.py run end to end in all three modes"],
     ]
     tab = pd.DataFrame(rows, columns=["Area", "Tests", "What is checked"])
     tab["Result"] = "all passed" if passed == len(tests) else f"{passed}/{len(tests)} passed"
     verdict = "all of them pass" if passed == len(tests) else f"{passed} pass"
+    cov = T["coverage"]
+    pct = lambda f: cov[f]["summary"]["percent_covered"] if f in cov else float("nan")
     D.p(f"{len(tests)} automated tests (pytest) check the properties that the results depend on. Table "
-        f"{D.ref('t_tests')} summarises them; {verdict}. The code also passes the Ruff linter without warnings, and "
-        "because every random value uses a fixed seed, running run_all.py again reproduces every number in this "
-        "report.")
+        f"{D.ref('t_tests')} summarises them; {verdict}. They run {pct('phaselab.py'):.0f}% of the lines of "
+        f"phaselab.py and {pct('recover.py'):.0f}% of recover.py. The code also passes the Ruff linter without "
+        "warnings. Every random value uses a fixed seed: a fresh copy of the repository was run from scratch and "
+        "reproduced every result table to within rounding error (largest difference 2×10<super>−14</super>).")
     D.table("t_tests", tab, "Automated tests.", col_widths=[3.6 * cm, 1.3 * cm, W - 7.0 * cm, 2.1 * cm],
             index=False)
 
@@ -461,8 +478,9 @@ def conclusion(D, R, T):
     D.p("The magnitude and the phase of the STFT carry different information, and the frame length decides which one "
         "matters more. With the usual 32 ms frames the magnitude carries most of the intelligibility, while the phase "
         "carries the pitch and the fine timing that make speech sound natural. With frames of about one second the "
-        "phase carries the intelligibility, and randomising it destroys the speech. A phase used for reconstruction "
-        "must be odd-symmetric if the result is to be real. Intelligibility in noise cannot be improved with a fixed "
+        "magnitude alone is no longer enough, and randomising the phase destroys the speech. A phase used for "
+        "reconstruction should be odd-symmetric to guarantee a real result. Intelligibility in noise cannot be "
+        "improved with a fixed "
         "band-pass filter, because the filter does not change the signal-to-noise ratio inside the bands that matter.")
     D.p("The answers to the individual parts are:")
     D.items([
@@ -470,7 +488,8 @@ def conclusion(D, R, T):
         f"the original, but STOI is {num(s1['STOI'])}.",
         f"An unrestricted random PH1 gives a complex sig2. With a symmetric PH1, sig2 is real, rough and noise-like, "
         f"about 6 dB weaker, with STOI {num(s2['STOI'])}. sig1 and sig2 differ only in phase coherence.",
-        "A real sig2 needs PH1(N − k) = −PH1(k) with the DC and Nyquist phases equal to 0 or π; "
+        "A real sig2 is guaranteed when PH1(N − k) = −PH1(k), with the DC and Nyquist phases equal to 0 or "
+        "π; "
         "infinitely many such patterns exist.",
         f"Random phase makes speech unintelligible only with frames of about 1 s (ESTOI "
         f"{num(p5['scrambled (replace phase)']['ESTOI'])}). Blind recovery is impossible; recovery works with the "

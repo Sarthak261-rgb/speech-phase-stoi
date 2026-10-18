@@ -177,6 +177,8 @@ def otp_scramble(x: np.ndarray, n: int, key: int) -> np.ndarray:
 
 
 def otp_descramble(s: np.ndarray, n: int, key: int, length: int) -> np.ndarray:
+    if len(s) % n:
+        raise ValueError(f"keyed signal must have a whole number of {n}-sample frames, got {len(s)} samples")
     n_fr = len(s) // n
     K = odd_random_phase(n, n_fr, np.random.default_rng(key)).T
     r = np.fft.ifft(np.fft.fft(s.reshape(n_fr, n), axis=1) * np.exp(-1j * K), axis=1)
@@ -260,23 +262,31 @@ def describe(ref: np.ndarray, est: np.ndarray, n_fft: int = N_FFT, hop: int = HO
 # ----------------------------------------------------------------------- noise
 def mix_at_snr(clean: np.ndarray, noise: np.ndarray, snr: float) -> tuple[np.ndarray, np.ndarray]:
     """Scale `noise` so that 10 log10(P_clean / P_noise) = snr. Returns (noisy, scaled_noise)."""
+    if len(noise) < len(clean):
+        raise ValueError(f"noise is shorter than the speech ({len(noise)} < {len(clean)} samples)")
     noise = noise[: len(clean)]
     p_s = np.mean(clean ** 2)
     p_n = np.mean(noise ** 2)
+    if p_n == 0:
+        raise ValueError("noise segment is silent")
     k = np.sqrt(p_s / (p_n * 10 ** (snr / 10)))
     return clean + k * noise, k * noise
 
 
 def pick_noise_segment(noise: np.ndarray, n: int, rng: np.random.Generator,
                        min_activity: float = 0.0) -> np.ndarray:
-    """Random segment of length n. For bursty noises (machinegun) we redraw until
-    the segment's active fraction (frames within 30 dB of the max) exceeds min_activity."""
+    """Random segment of length n. For bursty noise (machine-gun) segments are redrawn until the share of
+    active frames (within 30 dB of the loudest frame of the whole recording) reaches min_activity."""
+    if len(noise) < n:
+        raise ValueError(f"noise is shorter than the requested segment ({len(noise)} < {n} samples)")
+    if len(noise) == n:
+        return noise.copy()
+    frame_db = lambda v: 10 * np.log10(np.mean(sliding_window_view(v, 320)[::160] ** 2, axis=1) + 1e-20)
+    threshold = frame_db(noise).max() - 30
     for _ in range(200):
         start = int(rng.integers(0, len(noise) - n))
         seg = noise[start:start + n]
-        fr = sliding_window_view(seg, 320)[::160]
-        e = 10 * np.log10(np.mean(fr ** 2, axis=1) + 1e-20)
-        if np.mean(e > e.max() - 30) >= min_activity:
+        if np.mean(frame_db(seg) > threshold) >= min_activity:
             return seg.copy()
     return seg.copy()
 

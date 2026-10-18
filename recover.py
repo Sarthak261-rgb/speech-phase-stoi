@@ -6,8 +6,9 @@ Three ways, matching R1/R2/R3 in the report:
   # R1 blind: you only have the scrambled audio (and know the frame settings)
   python recover.py outputs/challenge/clean__scrambled.wav --mode blind -o rec_blind.wav
 
-  # R2 side information: you were also sent the true STFT magnitude (here: computed
-  #    from a reference wav, 32 ms Hann, 75 % overlap) and run Griffin-Lim on it
+  # R2 side information: you were also sent the true STFT magnitude (here computed
+  #    from a reference wav, 32 ms Hann, 75 % overlap) and run Griffin-Lim on it.
+  #    The scrambled file itself adds nothing in this mode; everything comes from the magnitude.
   python recover.py outputs/challenge/clean__scrambled.wav --mode magnitude \
          --mag-from data/speech/original.wav -o rec_mag.wav
 
@@ -23,7 +24,7 @@ import numpy as np
 import phaselab as pl
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("wav")
     ap.add_argument("--mode", choices=["blind", "magnitude", "key"], required=True)
@@ -35,27 +36,31 @@ def main():
     ap.add_argument("--length", type=int, help="original length in samples (key mode; default: from --ref)")
     ap.add_argument("--mag-from", help="wav whose 32 ms STFT magnitude is used (magnitude mode)")
     ap.add_argument("--ref", help="clean reference wav for STOI/ESTOI")
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
+    if a.mode == "magnitude" and not a.mag_from:
+        ap.error("--mode magnitude needs --mag-from")
+    if a.mode == "key" and a.key is None:
+        ap.error("--mode key needs --key")
 
     s = pl.load_wav(a.wav)
     ref = pl.load_wav(a.ref) if a.ref else None
     if a.mode == "blind":
-        L = len(s)
-        y = pl.griffin_lim(np.abs(pl.stft(s, a.n_fft, a.hop)), L, a.hop, n_iter=a.iters)
+        y = pl.griffin_lim(np.abs(pl.stft(s, a.n_fft, a.hop)), len(s), a.hop, n_iter=a.iters)
     elif a.mode == "magnitude":
         m = pl.load_wav(a.mag_from)
         y = pl.griffin_lim(np.abs(pl.stft(m)), len(m), pl.HOP, n_iter=a.iters)
     else:
-        if a.key is None:
-            ap.error("--mode key needs --key")
-        L = a.length or (len(ref) if ref is not None else len(s))
-        y = pl.otp_descramble(s, a.n_fft, a.key, L)
+        if len(s) % a.n_fft:
+            ap.error(f"a keyed file has a whole number of {a.n_fft}-sample frames; this one has {len(s)} samples")
+        length = a.length or (len(ref) if ref is not None else len(s))
+        y = pl.otp_descramble(s, a.n_fft, a.key, length)
     pl.save_wav(a.out, y)
     print(f"wrote {a.out}")
     if ref is not None:
         n = min(len(ref), len(y))
         print(f"STOI  {pl.stoi(ref[:n], y[:n]):.3f}")
         print(f"ESTOI {pl.stoi(ref[:n], y[:n], extended=True):.3f}")
+    return y
 
 
 if __name__ == "__main__":

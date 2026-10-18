@@ -35,7 +35,7 @@ file), and every step can be followed in the notebook [`Speech_Phase_STOI.ipynb`
 uv venv --python 3.11 .venv
 uv pip install --python .venv/Scripts/python.exe -r requirements.txt
 .venv/Scripts/python.exe run_all.py          # whole study, about half an hour
-.venv/Scripts/python.exe -m pytest           # 50 tests
+.venv/Scripts/python.exe -m pytest           # 65 tests, with coverage
 .venv/Scripts/ruff.exe check .               # lint
 .venv/Scripts/python.exe make_report.py      # PDF and Word report
 ```
@@ -59,7 +59,7 @@ To try the recovery exercise on the scrambled files in `outputs/challenge/`:
 | `recover.py` | recovery of scrambled files (blind, with magnitude, with key) |
 | `make_report.py`, `report_text.py` | build the report from the results |
 | `build_notebook.py` | builds the notebook |
-| `tests/` | pytest tests |
+| `tests/` | 65 pytest tests (97% line coverage of `phaselab.py`) |
 | `data/raw_speech`, `data/raw_noise` | the LibriSpeech recording and the three NOISEX-92 noises as downloaded |
 | `outputs/tables`, `outputs/results.json` | all numbers used in the report |
 | `outputs/challenge` | scrambled versions of all 16 signals for the recovery exercise |

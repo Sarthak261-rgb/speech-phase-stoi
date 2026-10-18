@@ -1,51 +1,66 @@
 id,file,description,outcome,seconds
-test_recording_is_about_ten_seconds_at_16k,test_data.py,The voice recording is a mono 16 kHz file of roughly 10 s (9 to 11 s).,passed,0.002
-test_recording_has_minimal_background_noise,test_data.py,Loud speech frames are more than 40 dB above the quietest frames (minimal background noise).,passed,0.004
+test_recording_is_about_ten_seconds_at_16k,test_data.py,The voice recording is a mono 16 kHz file of roughly 10 s (9 to 11 s).,passed,0.001
+test_recording_has_minimal_background_noise,test_data.py,Loud speech frames are more than 40 dB above the quietest frames (minimal background noise).,passed,0.003
 test_noisex_files_resampled_to_16k[white],test_data.py,Each NoiseX-92 noise is available at 16 kHz and is long enough to cut a 10 s segment.,passed,0.0
-test_noisex_files_resampled_to_16k[babble],test_data.py,Each NoiseX-92 noise is available at 16 kHz and is long enough to cut a 10 s segment.,passed,0.001
+test_noisex_files_resampled_to_16k[babble],test_data.py,Each NoiseX-92 noise is available at 16 kHz and is long enough to cut a 10 s segment.,passed,0.0
 test_noisex_files_resampled_to_16k[machinegun],test_data.py,Each NoiseX-92 noise is available at 16 kHz and is long enough to cut a 10 s segment.,passed,0.0
-test_mix_at_snr_hits_target[-2],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.004
-test_mix_at_snr_hits_target[0],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.002
-test_mix_at_snr_hits_target[2],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.002
-test_mix_at_snr_hits_target[5],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.002
-test_mix_at_snr_hits_target[10],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.002
-test_noise_segment_has_requested_length,test_noise_metrics_filters.py,A random noise segment of exactly the speech length is returned.,passed,0.001
-test_stoi_of_identical_signals_is_one,test_noise_metrics_filters.py,"STOI(x, x) = 1.",passed,0.023
-test_stoi_is_gain_invariant,test_noise_metrics_filters.py,"STOI ignores an overall gain, so level differences do not bias comparisons.",passed,0.014
-test_stoi_decreases_with_noise,test_noise_metrics_filters.py,STOI falls monotonically as the SNR drops.,passed,0.039
-test_per_band_stoi_matches_pystoi,test_noise_metrics_filters.py,The 15 per-band STOI values average exactly to the pystoi score.,passed,0.027
-test_spectral_convergence_zero_for_identical,test_noise_metrics_filters.py,Spectral convergence is 0 for identical magnitudes.,passed,0.0
-test_bpf_passes_midband_tone,test_noise_metrics_filters.py,A 1 kHz tone passes the 300-3400 Hz zero-phase Butterworth with less than 0.1 dB change.,passed,0.002
-test_bpf_rejects_out_of_band_tones[60],test_noise_metrics_filters.py,Tones well outside the pass band are attenuated by more than 40 dB.,passed,0.002
-test_bpf_rejects_out_of_band_tones[6000],test_noise_metrics_filters.py,Tones well outside the pass band are attenuated by more than 40 dB.,passed,0.001
-test_zero_phase_filter_has_no_delay_but_causal_does,test_noise_metrics_filters.py,Forward-backward filtering introduces no delay; the causal filter shifts the signal.,passed,0.014
-test_fir_delay_is_compensated,test_noise_metrics_filters.py,The linear-phase FIR output is time-aligned with its input.,passed,0.008
-test_lti_filter_keeps_passband_band_snr,test_noise_metrics_filters.py,An LTI band-pass filter leaves the SNR of every pass-band third-octave band unchanged (< 0.1 dB).,passed,0.014
-test_brickwall_removes_out_of_band_energy,test_noise_metrics_filters.py,The ideal brick-wall filter leaves no energy outside its pass band.,passed,0.001
-test_odd_random_phase_has_required_symmetry,test_phase.py,"Generated PH1 satisfies PH1[N-k] = -PH1[k] and has DC and Nyquist phases in {0, π}.",passed,0.001
-test_odd_phase_gives_real_sig2[0],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.021
-test_odd_phase_gives_real_sig2[1],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.021
-test_odd_phase_gives_real_sig2[2],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.02
-test_odd_phase_gives_real_sig2[3],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.02
-test_odd_phase_gives_real_sig2[4],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.026
-test_unconstrained_phase_gives_complex_sig2,test_phase.py,MG with an unconstrained random PH1 of the same size as PH gives a clearly complex signal.,passed,0.026
-test_dc_or_nyquist_phase_outside_0_pi_breaks_realness,test_phase.py,An odd PH1 whose DC/Nyquist phases are not 0 or π leaves a non-zero imaginary part.,passed,0.026
-test_constant_offset_breaks_oddness,test_phase.py,Adding a constant π/4 to an odd PH1 destroys the symmetry and makes sig2 complex.,passed,0.028
-test_zero_phase_frame_is_real_and_even,test_phase.py,IFFT of a frame's magnitude (zero phase) is real and even: r[n] = r[N-n].,passed,0.004
-test_zero_phase_creates_buzz_at_hop_rate,test_phase.py,"sig1 of white noise becomes periodic with the hop: clear autocorrelation peak at lag H, none in the input.",passed,0.012
-test_random_phase_keeps_one_over_R_of_energy,test_phase.py,Odd random phase on a redundant STFT keeps about H/N = 1/4 of the energy (−6 dB ± 1 dB).,passed,0.032
-test_keyed_scrambler_is_real_and_exactly_invertible,test_recovery.py,The phase one-time pad gives a real signal and the right key restores it exactly.,passed,0.01
-test_keyed_scrambler_wrong_key_fails,test_recovery.py,Descrambling with a wrong key does not give the speech back.,passed,0.025
-test_keyed_scrambler_preserves_frame_magnitudes,test_recovery.py,The keyed scrambler changes only the phase: every frame keeps its magnitude spectrum.,passed,0.009
-test_scrambling_makes_speech_unintelligible,test_recovery.py,Odd random phase on 1.024 s frames drives ESTOI close to zero.,passed,0.057
-test_scrambled_signal_is_a_griffin_lim_fixed_point,test_recovery.py,Griffin-Lim started from the scrambled signal's own phase does not move: blind recovery cannot prefer x.,passed,0.181
-test_griffin_lim_recovers_from_true_magnitude,test_recovery.py,"Given the true 32 ms magnitude, Fast Griffin-Lim restores an intelligible signal (STOI > 0.95).",passed,2.114
-test_perfect_reconstruction[512-128],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.001
-test_perfect_reconstruction[256-64],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.001
+test_wav_round_trip_keeps_samples,test_io_and_tools.py,Saving and loading a 16-bit wav changes the samples by no more than one quantisation step.,passed,0.013
+test_save_wav_normalises_peak,test_io_and_tools.py,With the default setting the saved file peaks at 0.89 of full scale.,passed,0.013
+test_load_wav_resamples_to_16k,test_io_and_tools.py,An 8 kHz file is resampled to 16 kHz without moving the frequency of a tone.,passed,0.012
+test_describe_of_identical_signals,test_io_and_tools.py,The comparison numbers are ideal when a signal is compared with itself.,passed,0.18
+test_snr_with_scaling_ignores_sign,test_io_and_tools.py,"The scaled waveform SNR treats -x as identical to x, as phase retrieval can only recover x up to sign.",passed,0.003
+test_mix_at_snr_rejects_short_or_silent_noise,test_io_and_tools.py,Mixing refuses a noise clip that is shorter than the speech or completely silent.,passed,0.002
+test_noise_segment_edge_cases,test_io_and_tools.py,A clip of exactly the requested length is returned as it is; a shorter clip is refused.,passed,0.001
+test_noise_segment_respects_activity,test_io_and_tools.py,For bursty noise the chosen segment contains the required share of active frames.,passed,0.008
+test_unknown_filter_kind_is_rejected,test_io_and_tools.py,Asking for a filter type that does not exist raises an error instead of returning the input.,passed,0.001
+test_descramble_rejects_wrong_length,test_io_and_tools.py,Descrambling a signal that is not a whole number of frames raises a clear error.,passed,0.001
+test_recover_key_mode_end_to_end,test_io_and_tools.py,recover.py --mode key restores a keyed file written to disk.,passed,0.181
+test_recover_magnitude_mode_end_to_end,test_io_and_tools.py,recover.py --mode magnitude rebuilds intelligible speech from the true magnitude.,passed,2.555
+test_recover_blind_mode_does_not_recover,test_io_and_tools.py,recover.py --mode blind runs but cannot bring back scrambled speech.,passed,1.448
+test_recover_requires_its_inputs[args0],test_io_and_tools.py,recover.py stops with a usage error when the key or the magnitude file is missing.,passed,0.011
+test_recover_requires_its_inputs[args1],test_io_and_tools.py,recover.py stops with a usage error when the key or the magnitude file is missing.,passed,0.028
+test_mix_at_snr_hits_target[-2],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.005
+test_mix_at_snr_hits_target[0],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.005
+test_mix_at_snr_hits_target[2],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.004
+test_mix_at_snr_hits_target[5],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.005
+test_mix_at_snr_hits_target[10],test_noise_metrics_filters.py,The noise is scaled so that the global SNR equals the target exactly.,passed,0.005
+test_noise_segment_has_requested_length,test_noise_metrics_filters.py,A random noise segment of exactly the speech length is returned.,passed,0.005
+test_stoi_of_identical_signals_is_one,test_noise_metrics_filters.py,"STOI(x, x) = 1.",passed,0.042
+test_stoi_is_gain_invariant,test_noise_metrics_filters.py,"STOI ignores an overall gain, so level differences do not bias comparisons.",passed,0.05
+test_stoi_decreases_with_noise,test_noise_metrics_filters.py,STOI falls monotonically as the SNR drops.,passed,0.152
+test_per_band_stoi_matches_pystoi,test_noise_metrics_filters.py,The 15 per-band STOI values average exactly to the pystoi score.,passed,0.106
+test_spectral_convergence_zero_for_identical,test_noise_metrics_filters.py,Spectral convergence is 0 for identical magnitudes.,passed,0.001
+test_bpf_passes_midband_tone,test_noise_metrics_filters.py,A 1 kHz tone passes the 300-3400 Hz zero-phase Butterworth with less than 0.1 dB change.,passed,0.005
+test_bpf_rejects_out_of_band_tones[60],test_noise_metrics_filters.py,Tones well outside the pass band are attenuated by more than 40 dB.,passed,0.006
+test_bpf_rejects_out_of_band_tones[6000],test_noise_metrics_filters.py,Tones well outside the pass band are attenuated by more than 40 dB.,passed,0.006
+test_zero_phase_filter_has_no_delay_but_causal_does,test_noise_metrics_filters.py,Forward-backward filtering introduces no delay; the causal filter shifts the signal.,passed,0.045
+test_fir_delay_is_compensated,test_noise_metrics_filters.py,The linear-phase FIR output is time-aligned with its input.,passed,0.02
+test_lti_filter_keeps_passband_band_snr,test_noise_metrics_filters.py,An LTI band-pass filter leaves the SNR of every pass-band third-octave band unchanged (< 0.1 dB).,passed,0.048
+test_brickwall_removes_out_of_band_energy,test_noise_metrics_filters.py,The ideal brick-wall filter leaves no energy outside its pass band.,passed,0.003
+test_odd_random_phase_has_required_symmetry,test_phase.py,"Generated PH1 satisfies PH1[N-k] = -PH1[k] and has DC and Nyquist phases in {0, π}.",passed,0.003
+test_odd_phase_gives_real_sig2[0],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.056
+test_odd_phase_gives_real_sig2[1],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.059
+test_odd_phase_gives_real_sig2[2],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.058
+test_odd_phase_gives_real_sig2[3],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.057
+test_odd_phase_gives_real_sig2[4],test_phase.py,MG with any odd random PH1 inverts to a real signal (imaginary part at rounding level).,passed,0.054
+test_unconstrained_phase_gives_complex_sig2,test_phase.py,MG with an unconstrained random PH1 of the same size as PH gives a clearly complex signal.,passed,0.056
+test_dc_or_nyquist_phase_outside_0_pi_breaks_realness,test_phase.py,An odd PH1 whose DC/Nyquist phases are not 0 or π leaves a non-zero imaginary part.,passed,0.057
+test_constant_offset_breaks_oddness,test_phase.py,Adding a constant π/4 to an odd PH1 destroys the symmetry and makes sig2 complex.,passed,0.063
+test_zero_phase_frame_is_real_and_even,test_phase.py,IFFT of a frame's magnitude (zero phase) is real and even: r[n] = r[N-n].,passed,0.011
+test_zero_phase_creates_buzz_at_hop_rate,test_phase.py,"sig1 of white noise becomes periodic with the hop: clear autocorrelation peak at lag H, none in the input.",passed,0.033
+test_random_phase_keeps_one_over_R_of_energy,test_phase.py,Odd random phase on a redundant STFT keeps about H/N = 1/4 of the energy (−6 dB ± 1 dB).,passed,0.075
+test_keyed_scrambler_is_real_and_exactly_invertible,test_recovery.py,The phase one-time pad gives a real signal and the right key restores it exactly.,passed,0.027
+test_keyed_scrambler_wrong_key_fails,test_recovery.py,Descrambling with a wrong key does not give the speech back.,passed,0.083
+test_keyed_scrambler_preserves_frame_magnitudes,test_recovery.py,The keyed scrambler changes only the phase: every frame keeps its magnitude spectrum.,passed,0.023
+test_scrambling_makes_speech_unintelligible,test_recovery.py,Odd random phase on 1.024 s frames drives ESTOI close to zero.,passed,0.161
+test_scrambled_signal_is_a_griffin_lim_fixed_point,test_recovery.py,Griffin-Lim started from the scrambled signal's own phase does not move: blind recovery cannot prefer x.,passed,0.446
+test_griffin_lim_recovers_from_true_magnitude,test_recovery.py,"Given the true 32 ms magnitude, Fast Griffin-Lim restores an intelligible signal (STOI > 0.95).",passed,4.181
+test_perfect_reconstruction[512-128],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.006
+test_perfect_reconstruction[256-64],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.002
 test_perfect_reconstruction[1024-256],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.001
-test_perfect_reconstruction[16384-4096],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.02
-test_stft_shape_is_two_sided,test_stft.py,"The STFT keeps all N bins (two-sided spectrum), not only 0..N/2.",passed,0.001
-test_real_signal_has_hermitian_stft,test_stft.py,Every frame of the STFT of a real signal is conjugate-symmetric: X[N-k] = conj(X[k]).,passed,0.012
-test_hann_squared_overlap_is_constant,test_stft.py,"With hop N/4 the squared Hann windows overlap-add to a constant (1.5), so the inverse is well conditioned.",passed,0.0
-test_istft_returns_complex_for_non_hermitian_input,test_stft.py,A spectrogram that is not conjugate-symmetric gives a complex-valued inverse.,passed,0.001
-test_stft_of_istft_is_a_projection,test_stft.py,STFT(ISTFT(Y)) is idempotent: applying it twice equals applying it once (consistency projection).,passed,0.002
+test_perfect_reconstruction[16384-4096],test_stft.py,ISTFT(STFT(x)) returns x to machine precision for every window/hop used in the study.,passed,0.031
+test_stft_shape_is_two_sided,test_stft.py,"The STFT keeps all N bins (two-sided spectrum), not only 0..N/2.",passed,0.004
+test_real_signal_has_hermitian_stft,test_stft.py,Every frame of the STFT of a real signal is conjugate-symmetric: X[N-k] = conj(X[k]).,passed,0.03
+test_hann_squared_overlap_is_constant,test_stft.py,"With hop N/4 the squared Hann windows overlap-add to a constant (1.5), so the inverse is well conditioned.",passed,0.002
+test_istft_returns_complex_for_non_hermitian_input,test_stft.py,A spectrogram that is not conjugate-symmetric gives a complex-valued inverse.,passed,0.003
+test_stft_of_istft_is_a_projection,test_stft.py,STFT(ISTFT(Y)) is idempotent: applying it twice equals applying it once (consistency projection).,passed,0.01
