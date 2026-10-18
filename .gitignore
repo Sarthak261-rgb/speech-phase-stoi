@@ -16,3 +16,4 @@ report/_img/
 data/raw_speech/*
 !data/raw_speech/1272-128104-0003.flac
 !data/raw_speech/1272-128104-0003.txt
+.coverage
